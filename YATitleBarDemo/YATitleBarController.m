@@ -49,7 +49,6 @@
         [self.titleButtons addObject:titleBtn];
     }
     
-    
     //把第一个按键默认为选中状态;
     UIButton *selectedBtn = [self.titleButtons objectAtIndex:0];
     [selectedBtn setTitleColor:self.selectedColor forState:UIControlStateNormal];
@@ -152,17 +151,13 @@
 
 
 
-
-
-
-
-
 @interface YATitleBarController ()<YATitleBarDelegate,UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) YATitleBar *titleBar;
 @property (nonatomic, weak) UIViewController *currentVC;
 @property (nonatomic, assign) NSInteger currentIndex;
+@property (nonatomic, strong) NSMutableArray <NSString *> *titles;
 
 @end
 
@@ -195,7 +190,6 @@
     
     if (viewContoller.navigationController) {
         viewContoller.edgesForExtendedLayout = UIRectEdgeNone;
-        //Review:如果viewContoller的容器是navigationController,则设置viewContoller.view的尺寸从navigationBar的下边沿开始算;
     }
     if(self.titleBarHeight == 0) {
         self.titleBarHeight = kTitleBarHeight;
@@ -217,14 +211,6 @@
 
 #pragma mark - UIScrollViewDelegate
 
-/*
- Review:
- 当用 setContentOffset: 这个方法让 scrollView 滑动时，如果动画效果为YES，会调用很多次，如果为NO，只会调用一次。
- */
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    NSInteger currentIndex = scrollView.contentOffset.x / kScreenWidth;
-//    [self.titleBar setSelectedButton:currentIndex];
-//}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
@@ -264,5 +250,17 @@
     return _scrollView;
 }
 
+
+- (NSMutableArray <NSString *> *)titles {
+
+    if (_titles == nil) {
+        _titles = [NSMutableArray array];
+        for (int i = 0; i < self.viewControllers.count; i ++) {
+            UIViewController *vc = [self.viewControllers objectAtIndex:i];
+            [_titles addObject:vc.title];
+        }
+    }
+    return _titles;
+}
 
 @end
